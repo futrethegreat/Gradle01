@@ -28,12 +28,12 @@ public class BookManagement {
     lBook.setBookTitle(lBookTitle);
 
     if (lBook.existsBookTitleInDB(Main.c)) {
-      Functions.consoleMsg("WARNING: " + lBookTitle + " not created. Book already exists in DB.");
+      System.out.println("WARNING: " + lBookTitle + " not created. Book already exists in DB.");
     } else {
       if (lBook.addBookToDB(Main.c) == 1) {
-        Functions.consoleMsg("INFO: " + lBookTitle + " created succesfully in DB.");
+        System.out.println("INFO: " + lBookTitle + " created succesfully in DB.");
       } else {
-        Functions.consoleMsg("ERROR: " + lBookTitle + " does not exist but NOT created in DB.");
+        System.out.println("ERROR: " + lBookTitle + " does not exist but NOT created in DB.");
       }
     }
   }
@@ -54,18 +54,18 @@ public class BookManagement {
 
     switch (lBook.deleteBookFromDB(Main.c)) {
     case 1:
-      Functions.consoleMsg("INFO: " + lBookID + " deleted SUCCESSFULLY.");
+      System.out.println("INFO: " + lBookID + " deleted SUCCESSFULLY.");
       break;
     case 0:
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: Book with ID:" + lBookID + " does not exist in DB. Nothing to delete.");
       break;
     case -1:
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: Book with ID:" + lBookID + " not deleted. Delete related books first.");
       break;
     default:
-      Functions.consoleMsg("ERROR: Something happened deleting the Book using ID.");
+      System.out.println("ERROR: Something happened deleting the Book using ID.");
       break;
     }
   }
@@ -87,7 +87,7 @@ public class BookManagement {
     Book lBook = new Book(Main.c, lBookID);
 
     if (lBook.getBookTitle() == null) {
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: Book with ID:" + lBookID + " does not exist in DB. Nothing to modify.");
     } else {
       lBookOldTitle = lBook.getBookTitle();
@@ -97,18 +97,18 @@ public class BookManagement {
 
       switch (lBook.modifyBookTitleInDB(Main.c)) {
       case 1:
-        Functions.consoleMsg("INFO: Book with ID: " + lBookID + " modified SUCCESSFULLY from: "
+        System.out.println("INFO: Book with ID: " + lBookID + " modified SUCCESSFULLY from: "
             + lBookOldTitle + " to: " + lBookNewTitle);
         break;
       case 0:
-        Functions.consoleMsg(
+        System.out.println(
             "INFO: Book with ID:" + lBookID + " does not exist in DB. Nothing to modify.");
         break;
       case -1:
-        Functions.consoleMsg("INFO: Book with ID:" + lBookID + " not modified.");
+        System.out.println("INFO: Book with ID:" + lBookID + " not modified.");
         break;
       default:
-        Functions.consoleMsg("ERROR: Something happened deleting the Book using ID.");
+        System.out.println("ERROR: Something happened deleting the Book using ID.");
         break;
       }
     }

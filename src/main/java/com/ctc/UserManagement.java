@@ -29,12 +29,12 @@ public class UserManagement {
     lUser.setUserName(lUserName);
 
     if (lUser.existsUserNameInDB(Main.c)) {
-      Functions.consoleMsg("WARNING: " + lUserName + " not created. User already exists in DB.");
+      System.out.println("WARNING: " + lUserName + " not created. User already exists in DB.");
     } else {
       if (lUser.addUserToDB(Main.c) == 1) {
-        Functions.consoleMsg("INFO: " + lUserName + " created succesfully in DB.");
+        System.out.println("INFO: " + lUserName + " created succesfully in DB.");
       } else {
-        Functions.consoleMsg("ERROR: " + lUserName + " does not exist but NOT created in DB.");
+        System.out.println("ERROR: " + lUserName + " does not exist but NOT created in DB.");
       }
     }
   }
@@ -55,18 +55,18 @@ public class UserManagement {
 
     switch (lUser.deleteUserFromDB(Main.c)) {
     case 1:
-      Functions.consoleMsg("INFO: " + lUserID + " deleted SUCCESSFULLY.");
+      System.out.println("INFO: " + lUserID + " deleted SUCCESSFULLY.");
       break;
     case 0:
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: User with ID:" + lUserID + " does not exist in DB. Nothing to delete.");
       break;
     case -1:
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: User with ID:" + lUserID + " not deleted. Return borrowed books first.");
       break;
     default:
-      Functions.consoleMsg("ERROR: Something happened deleting the User using ID.");
+      System.out.println("ERROR: Something happened deleting the User using ID.");
       break;
     }
   }
@@ -88,7 +88,7 @@ public class UserManagement {
     User lUser = new User(Main.c, lUserID);
 
     if (lUser.getUserName() == null) {
-      Functions.consoleMsg(
+      System.out.println(
           "INFO: User with ID:" + lUserID + " does not exist in DB. Nothing to modify.");
     } else {
       lUserOldName = lUser.getUserName();
@@ -98,18 +98,18 @@ public class UserManagement {
 
       switch (lUser.modifyUserNameInDB(Main.c)) {
       case 1:
-        Functions.consoleMsg("INFO: User with ID: " + lUserID + " modified SUCCESSFULLY from: "
+        System.out.println("INFO: User with ID: " + lUserID + " modified SUCCESSFULLY from: "
             + lUserOldName + " to: " + lUserNewName);
         break;
       case 0:
-        Functions.consoleMsg(
+        System.out.println(
             "INFO: User with ID:" + lUserID + " does not exist in DB. Nothing to modify.");
         break;
       case -1:
-        Functions.consoleMsg("INFO: User with ID:" + lUserID + " not modified.");
+        System.out.println("INFO: User with ID:" + lUserID + " not modified.");
         break;
       default:
-        Functions.consoleMsg("ERROR: Something happened deleting the User using ID.");
+        System.out.println("ERROR: Something happened deleting the User using ID.");
         break;
       }
     }

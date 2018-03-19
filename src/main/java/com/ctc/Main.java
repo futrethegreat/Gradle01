@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-//import mariadb.DBUnitUtils;
+import mariadb.DBUnitUtils;
 import mariadb.MariaDB;
 
 public class Main {
@@ -14,8 +14,10 @@ public class Main {
 
 	public static void main(String[] args) throws SQLException {
 		System.out.println(System.getProperty("user.dir"));
+		Utils.setEnvironment();
+
 		try {
-			c = javaMySQLBasic.connectDatabase("192.168.116.163", "3307", "library", "jenkins", "jenkins");
+			c = javaMySQLBasic.connectDatabase(Utils.dbIP, Utils.dbPort, Utils.dbName, Utils.dbUser, Utils.dbPassword);
 			Main.mainMenu();
 			keyboard.close();
 			c.close();
@@ -27,7 +29,7 @@ public class Main {
 			System.out.println("ERROR: Exception not handled: ");
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private static void mainMenu() throws SQLException {
@@ -238,18 +240,8 @@ public class Main {
 
 			switch (lMenuOption) {
 			case 1:
-				// DBUnitUtils.generatePartialXML(MariaDB.JDBC_DRIVER,
-				// "jdbc:mariadb://localhost:3306/library", "ulibrary",
-				// "Si5ArA", "library", "LibraryPartial");
-				break;
-			case 2:
-				LoanManagement.borrowBook();
-				break;
-			case 3:
-				LoanManagement.returnBook();
-				break;
-			case 4:
-				LoanManagement.getLoansList(0);
+				DBUnitUtils.generatePartialXML(Utils.dbDriverName, Utils.dbUrl, Utils.dbUser, Utils.dbPassword,
+						Utils.dbName, "LibraryPartial");
 				break;
 			default:
 				break loop;

@@ -3,6 +3,8 @@ package Steps;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 
+import com.ctc.Utils;
+
 import Base.BaseUtil;
 import Pages.SecureTrefiLoginPage;
 import Pages.TrefiMainPage;
@@ -13,9 +15,9 @@ import cucumber.api.java.en.Then;
 public class LoginStep extends BaseUtil {
 
 	private BaseUtil base;
-	// private static final String TrefiMainHomePage = "http://www.trefi.com";
-	private static final String SecureTrefiPage = "https://secure.trefi.com/auth/";
-	private static final int Wait2secs = 2000; // 2000 Milliseconds
+	// public final String TrefiMainHomePage = "http://www.trefi.com";
+	public final String SecureTrefiPage = "https://secure.trefi.com/auth/";
+	public final int Wait2secs = 2000; // 2000 Milliseconds
 
 	public LoginStep(BaseUtil base) {
 		this.base = base;
@@ -29,8 +31,9 @@ public class LoginStep extends BaseUtil {
 
 	@Given("^I navigate to the secure Trefi page$")
 	public void givenINavigateToTheSecureTrefiPage() throws Throwable {
-		base.driver.navigate().to(SecureTrefiPage);
-		System.out.println("*** GIVEN ***");
+		// base.driver.navigate().to(SecureTrefiPage);
+		base.driver.get(SecureTrefiPage);
+		Utils.consoleMsg("*** GIVEN ***");
 		// base.driver.navigate().to("www.google.com");
 		Thread.sleep(Wait2secs);
 	}
@@ -48,8 +51,8 @@ public class LoginStep extends BaseUtil {
 		SecureTrefiLoginPage PageSecureTrefi = new SecureTrefiLoginPage(base.driver);
 		PageSecureTrefi.Login(UserName, Password);
 
-		System.out.println("Username: " + UserName);
-		System.out.println("Password: " + Password);
+		Utils.consoleMsg("Username: " + UserName);
+		Utils.consoleMsg("Password: " + Password);
 		Thread.sleep(Wait2secs);
 	}
 
@@ -63,7 +66,7 @@ public class LoginStep extends BaseUtil {
 	public void thenIShouldSeeTheToolMainPage() throws Throwable {
 		SecureTrefiLoginPage PageSecureTrefi = new SecureTrefiLoginPage(base.driver);
 		try {
-			// System.out.println(PageSecureTrefi.getLblLoginFailed());
+			// Functions.consoleMsg(PageSecureTrefi.getLblLoginFailed());
 			// Si llega aqui es que el mensaje de error existia -> Login incorrecto
 			PageSecureTrefi.clickLogInBtn();
 			assertEquals(PageSecureTrefi.getErrorText(), "Sign in failed, please try again",
@@ -72,7 +75,7 @@ public class LoginStep extends BaseUtil {
 		} catch (Exception e) {
 			// Si entra aqui es que no hay mensaje de error -> Login correcto
 			// e.printStackTrace();
-			System.out.println("Login correcto");
+			Utils.consoleMsg("Login correcto");
 			Thread.sleep(Wait2secs);
 			// PageSecureTrefi.clickLogoutLnk();
 			// Thread.sleep(Wait2secs);
