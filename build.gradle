@@ -53,6 +53,9 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:'3.9.1'
     // https://mvnrepository.com/artifact/net.masterthought/maven-cucumber-reporting
 	compile group: 'net.masterthought', name: 'maven-cucumber-reporting', version: '3.15.0'
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-htmlunit-driver
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-htmlunit-driver', version: '2.52.0'
+	
     
     // Use JUnit test framework
 	// https://mvnrepository.com/artifact/junit/junit

@@ -7,33 +7,42 @@ import org.openqa.selenium.support.PageFactory;
 
 public class SecureTrefiLoginPage {
 
-  public SecureTrefiLoginPage(WebDriver driver) {
-    PageFactory.initElements(driver, this);
-  }
+	public SecureTrefiLoginPage(WebDriver driver) {
+		PageFactory.initElements(driver, this);
+	}
 
-  @FindBy(id = "user-name")
-  public WebElement txtUserName;
-  @FindBy(id = "user-pwd")
-  public WebElement txtPassword;
-  @FindBy(id = "trefi-auth-btn")
-  public WebElement btnLogIn;
-  @FindBy(xpath = "//*[@id=\"enrollform\"]/div/span")
-  public WebElement txtErrorLogIn;
+	// @FindBy(name = "UserName") //Prueba executeautomation
+	// @FindBy(id = "user-name")
+	@FindBy(name = "signinid")
+	public WebElement txtUserName;
 
-  public void Login(String userName, String password) {
-    txtUserName.clear();
-    txtPassword.clear();
-    txtUserName.sendKeys(userName);
-    txtPassword.sendKeys(password);
-  }
+	// @FindBy(name = "Password") //Prueba executeautomation
+	// @FindBy(id = "user-pwd")
+	@FindBy(name = "pass")
+	public WebElement txtPassword;
 
-  public void clickLogInBtn() {
-    // Click Login button
-    btnLogIn.click();
-  }
+	// @FindBy(name = "Login") //Prueba executeautomation
+	// @FindBy(id = "trefi-auth-btn")
+	@FindBy(name = "submitTrefi")
+	public WebElement btnLogIn;
 
-  public String getErrorText() {
-    return txtErrorLogIn.getText().trim();
-  }
+	@FindBy(xpath = "//*[@id=\"enrollform\"]/div/span")
+	public WebElement txtErrorLogIn;
+
+	public void Login(String userName, String password) {
+		txtUserName.clear();
+		txtPassword.clear();
+		txtUserName.sendKeys(userName);
+		txtPassword.sendKeys(password);
+	}
+
+	public void clickLogInBtn() {
+		// Click Login button
+		btnLogIn.click();
+	}
+
+	public String getErrorText() {
+		return txtErrorLogIn.getText().trim();
+	}
 
 }

@@ -3,6 +3,12 @@ package Steps;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import com.ctc.Utils;
 
 import Base.BaseUtil;
@@ -31,11 +37,24 @@ public class LoginStep extends BaseUtil {
 
 	@Given("^I navigate to the secure Trefi page$")
 	public void givenINavigateToTheSecureTrefiPage() throws Throwable {
-		// base.driver.navigate().to(SecureTrefiPage);
+
+		Utils.consoleMsg("*** ppio Given ***");
 		base.driver.get(SecureTrefiPage);
+		Utils.consoleMsg("*** despues get page ***");
+		waitUntil_isPresent(base.driver, By.name("signinid"));
+
+		Utils.consoleMsg("*** Esta presente ***");
+		Utils.consoleMsg(
+				"1: " + base.driver.findElement(By.name("enrollform")).findElement(By.name("signinid")).getTagName());
+
+		// base.driver.get("http://www.executeautomation.com/demosite/Login.html");
+		// Utils.consoleMsg("1: " +
+		// base.driver.findElement(By.name("Login")).findElement(By.name("Login")).getTagName());
+		// Utils.consoleMsg("2: " +
+		// base.driver.findElement(By.name("Login")).getTagName());
+
 		Utils.consoleMsg("*** GIVEN ***");
-		// base.driver.navigate().to("www.google.com");
-		Thread.sleep(Wait2secs);
+
 	}
 
 	@And("^I click on Sign In link")
@@ -80,6 +99,17 @@ public class LoginStep extends BaseUtil {
 			// PageSecureTrefi.clickLogoutLnk();
 			// Thread.sleep(Wait2secs);
 		}
+	}
+
+	public boolean waitUntil_isPresent(final WebDriver driver, final By locator) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+		} catch (TimeoutException te) {
+			te.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }

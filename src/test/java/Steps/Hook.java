@@ -3,7 +3,9 @@ package Steps;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.ctc.Utils;
@@ -20,57 +22,20 @@ import cucumber.api.java.Before;
 public class Hook extends BaseUtil {
 
 	private BaseUtil base;
-	// public final String SearchTermsFile = "C:\\Libs\\SearchTerms.xls";
-	// public final String ChromeDriverFileLinux = System.getProperty("user.dir") +
-	// "/src/resources/chromedriver";
-	// public final String ChromeDriverFileWindows = "C:\\Libs\\chromedriver.exe";
-	// public final String ChromeDriverType = "webdriver.chrome.driver";
-	// public final String FirefoxDriverFileLinux = System.getProperty("user.dir") +
-	// "/src/resources/geckodriver";
-	// public final String FirefoxDriverFileWindows = "C:\\Libs\\geckodriver.exe";
-	// public final String FirefoxDriverType = "webdriver.gecko.driver";
-	// public final String BROWSER = "FF"; // Options can be CH FF IE SF OP
-	// public final String OperatingSystem =
-	// System.getProperty("os.name").toLowerCase();
-	// public String DriverFile;
-	// public String DriverType;
 
 	public Hook(BaseUtil base) {
 		this.base = base;
 	}
 
 	@Before
-	public void InitializeTest() {
-		// if (OperatingSystem.contains("win") && (BROWSER == "FF")) {
-		// DriverFile = FirefoxDriverFileWindows;
-		// DriverType = FirefoxDriverType;
-		// } else if (OperatingSystem.contains("win") && (BROWSER == "CH")) {
-		// DriverFile = ChromeDriverFileWindows;
-		// DriverType = ChromeDriverType;
-		// } else if (OperatingSystem.contains("nux") && (BROWSER == "FF")) {
-		// DriverFile = FirefoxDriverFileLinux;
-		// DriverType = FirefoxDriverType;
-		// } else if (OperatingSystem.contains("nux") && (BROWSER == "CH")) {
-		// DriverFile = ChromeDriverFileLinux;
-		// DriverType = ChromeDriverType;
-		// }
+	public void InitializeTest() throws InterruptedException {
 		Utils.setEnvironment();
 		base.driver = openBrowser();
+		Thread.sleep(3000);
 
 		Utils.consoleMsg(
 				"Opening browser: " + Utils.BROWSER + " for " + Utils.OperatingSystem.toUpperCase().toString());
 
-		// switch (BROWSER) {
-		// case "CH":
-		// base.driver = openChrome();
-		// break;
-		// case "FF":
-		// base.driver = openFirefox();
-		// Functions.consoleMsg("Opened FF");
-		// break;
-		// default:
-		// base.driver = openFirefox();
-		// }
 	}
 
 	@After
@@ -83,8 +48,8 @@ public class Hook extends BaseUtil {
 		String browserName = caps.getBrowserName();
 		String browserVersion = caps.getVersion();
 
-		Utils.consoleMsg("OS = " + Utils.OperatingSystem.toUpperCase() + ", Browser = " + browserName + " "
-				+ browserVersion);
+		Utils.consoleMsg(
+				"OS = " + Utils.OperatingSystem.toUpperCase() + ", Browser = " + browserName + " " + browserVersion);
 
 		base.driver.quit();
 	}
@@ -98,31 +63,17 @@ public class Hook extends BaseUtil {
 		// picocontainer
 		// (hook y loginstep extienden base)
 		if (Utils.BROWSER == "CH") {
-			return new ChromeDriver();
+			ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("headless");
+			chromeOptions.addArguments("window-size=1200x800");
+			return new ChromeDriver(chromeOptions);
 		} else if (Utils.BROWSER == "FF") {
-			return new FirefoxDriver();
+			FirefoxOptions options = new FirefoxOptions();
+			options.setHeadless(true);
+
+			return new FirefoxDriver(options);
 		} else
 			return new FirefoxDriver();
 	}
 
-	// private WebDriver openChrome() {
-	// // Passing the real Chrome webdriver
-	// Functions.consoleMsg("Opening the browser : Chrome");
-	// setBrowserProperty(ChromeDriverType, ChromeDriverFile);
-	// // driver se puede usar en LoginStep por dependency injection usando
-	// // picocontainer
-	// // (hook y loginstep extienden base)
-	// return new ChromeDriver();
-	// }
-	//
-	// private WebDriver openFirefox() {
-	// // Passing the real Firefox webdriver
-	// Functions.consoleMsg("Opening the browser : Firefox");
-	// setBrowserProperty(FirefoxDriverType, FirefoxDriverFile);
-	// Functions.consoleMsg("Opened: Firefox");
-	// // driver se puede usar en LoginStep por dependency injection usando
-	// // picocontainer
-	// // (hook y loginstep extienden base)
-	// return new FirefoxDriver();
-	// }
 }
