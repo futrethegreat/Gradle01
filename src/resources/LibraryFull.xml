@@ -5,7 +5,7 @@
   <authors AuthorID="3" AuthorName="J.R.R. Tolkien"/>
   <authors AuthorID="4" AuthorName="Pedro Calderón de la Barca"/>
   <authors AuthorID="8" AuthorName="Francisco Ibañez"/>
-  <books BookID="1" BookTitle="El ingenioso hidalgo don Quijote de la Mancha" AuthorID="1" Lent="1"/>
+  <books BookID="1" BookTitle="El INGENIOSO HIDALGO don Quijote de la Mancha" AuthorID="1" Lent="1"/>
   <books BookID="2" BookTitle="Sin noticias de Gurb" AuthorID="2" Lent="1"/>
   <books BookID="3" BookTitle="La verdad sobre el caso Savolta" AuthorID="2" Lent="1"/>
   <books BookID="4" BookTitle="El misterio de la cripta embrujada" AuthorID="2" Lent="0"/>

@@ -1,5 +1,6 @@
 package mariadb;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -7,6 +8,10 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.dbunit.IDatabaseTester;
+import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
@@ -15,9 +20,12 @@ import org.dbunit.database.QueryDataSet;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatDtdDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.dataset.xml.FlatXmlWriter;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
+import org.h2.jdbcx.JdbcDataSource;
+import org.h2.tools.RunScript;
 
 import com.ctc.Utils;
 
@@ -36,6 +44,21 @@ public class DBUnitUtils
 			conn = DriverManager.getConnection(urlDB, userDB, passwordDB);
 			IDatabaseConnection connection = new DatabaseConnection(conn, schemaBD);
 
+			/*
+			 * Added these 2 lines to get rid of the warning WARN
+			 * org.dbunit.dataset.AbstractTableMetaData - Potential problem found: The
+			 * configured data type factory 'class
+			 * org.dbunit.dataset.datatype.DefaultDataTypeFactory' might cause problems with
+			 * the current database 'MySQL' (e.g. some datatypes may not be supported
+			 * properly). In rare cases you might see this message because the list of
+			 * supported database products is incomplete (list=[derby]). If so please
+			 * request a java-class update via the forums.If you are using your own
+			 * IDataTypeFactory extending DefaultDataTypeFactory, ensure that you override
+			 * getValidDbProducts() to specify the supported database products.
+			 */
+			DatabaseConfig dbConfig = connection.getConfig();
+			dbConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
+
 			DatabaseSequenceFilter filter = new DatabaseSequenceFilter(connection);
 			IDataSet datasetAll = new FilteredDataSet(filter, connection.createDataSet());
 			QueryDataSet partialDataSet = new QueryDataSet(connection);
@@ -49,8 +72,7 @@ public class DBUnitUtils
 			}
 
 			// Specify the location of the flat file(XML)
-			FlatXmlWriter datasetWriter = new FlatXmlWriter(
-					new FileOutputStream(Utils.path2XML + nameXML + ".xml"));
+			FlatXmlWriter datasetWriter = new FlatXmlWriter(new FileOutputStream(Utils.path2XML + nameXML + ".xml"));
 
 			// Export the data
 			datasetWriter.write(partialDataSet);
@@ -59,7 +81,7 @@ public class DBUnitUtils
 			exc.printStackTrace();
 
 		} finally {
-			Utils.consoleMsg("Partial DB " + schemaBD + " successfully exported to:" + nameXML);
+			Utils.consoleMsg("Full DB File: " + Utils.path2XML + nameXML + ".xml created successfully!");
 			conn.close();
 		}
 	}
@@ -74,9 +96,19 @@ public class DBUnitUtils
 			conn = DriverManager.getConnection(urlDB, userDB, passwordDB);
 			IDatabaseConnection connection = new DatabaseConnection(conn, schemaBD);
 
+			/*
+			 * Added these 2 lines to get rid of the warning WARN
+			 * org.dbunit.dataset.AbstractTableMetaData - Potential problem found: The
+			 * configured data type factory 'class
+			 * org.dbunit.dataset.datatype.DefaultDataTypeFactory' might cause problems with
+			 * the current database 'MySQL' (e.g. some datatypes may not be supported
+			 * properly). In rare cases you might see this message because the list of
+			 * supported database products is incomplete (list=[derby]). If so please
+			 * request a java-class update via the forums.If you are using your own
+			 * IDataTypeFactory extending DefaultDataTypeFactory, ensure that you override
+			 * getValidDbProducts() to specify the supported database products.
+			 */
 			DatabaseConfig dbConfig = connection.getConfig();
-
-			// added this line to get rid of the warning
 			dbConfig.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
 
 			QueryDataSet partialDataSet = new QueryDataSet(connection);
@@ -87,13 +119,12 @@ public class DBUnitUtils
 			partialDataSet.addTable("users");
 
 			// Specify the location of the flat file(XML)
-			FlatXmlWriter datasetWriter = new FlatXmlWriter(
-					new FileOutputStream(Utils.path2XML + nameXML + ".xml"));
+			FlatXmlWriter datasetWriter = new FlatXmlWriter(new FileOutputStream(Utils.path2XML + nameXML + ".xml"));
 
 			// Export the data
 			datasetWriter.write(partialDataSet);
 
-			Utils.consoleMsg("File: " + Utils.path2XML + nameXML + ".xml created successfully!");
+			Utils.consoleMsg("Partial DB File: " + Utils.path2XML + nameXML + ".xml created successfully!");
 
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -113,7 +144,6 @@ public class DBUnitUtils
 			IDatabaseConnection connection = new DatabaseConnection(conn);
 
 			DatabaseOperation.INSERT.execute(connection,
-					// new FlatXmlDataSet(new FileInputStream("C:\\" + nameXML + ".xml")));
 					new FlatDtdDataSet(new FileInputStream(Utils.path2XML + nameXML + ".xml")));
 
 		} catch (Exception exc) {
@@ -132,7 +162,6 @@ public class DBUnitUtils
 			conn = DriverManager.getConnection(urlDB, userDB, passworDB);
 			IDatabaseConnection connection = new DatabaseConnection(conn);
 			DatabaseOperation.DELETE.execute(connection,
-					// new FlatXmlDataSet(new FileInputStream("C:\\" + nameXML + ".xml")));
 					new FlatDtdDataSet(new FileInputStream(Utils.path2XML + nameXML + ".xml")));
 
 		} catch (Exception exc) {
@@ -142,4 +171,46 @@ public class DBUnitUtils
 		}
 	}
 
+	private static IDataSet readDataSet(String nameXML) throws Exception {
+		return new FlatXmlDataSetBuilder().build(new File(Utils.path2XML + nameXML + ".xml"));
+	}
+
+	private static void cleanlyInsertDataset(IDataSet dataSet) throws Exception {
+		IDatabaseTester databaseTester = new JdbcDatabaseTester(Utils.dbTestingDriver, Utils.dbTestingURL,
+				Utils.dbTestingUser, Utils.dbTestingPassword) {
+
+			// Para quitar el warning sobre los dttos tipos de datos entre bases de datos
+			@Override
+			public IDatabaseConnection getConnection() throws Exception {
+				IDatabaseConnection connection = super.getConnection();
+
+				connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+						new org.dbunit.ext.h2.H2DataTypeFactory());
+
+				return connection;
+			}
+		};
+
+		databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
+		databaseTester.setDataSet(dataSet);
+		databaseTester.onSetup();
+	}
+
+	public static void importDataSet() throws Exception {
+		IDataSet dataSet = readDataSet("LibraryFull");
+		cleanlyInsertDataset(dataSet);
+	}
+
+	public static void createSchema() throws Exception {
+		RunScript.execute(Utils.dbTestingURL, Utils.dbTestingUser, Utils.dbTestingPassword, Utils.dbTestingSchema, null,
+				false);
+	}
+
+	public static DataSource dataSource() {
+		JdbcDataSource dataSource = new JdbcDataSource();
+		dataSource.setURL(Utils.dbTestingURL);
+		dataSource.setUser(Utils.dbTestingUser);
+		dataSource.setPassword(Utils.dbTestingPassword);
+		return dataSource;
+	}
 }

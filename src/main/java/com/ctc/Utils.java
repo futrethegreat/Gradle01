@@ -11,18 +11,25 @@ public class Utils {
 	private final static String FirefoxDriverFileWindows = "src\\resources\\geckodriver.exe";
 	private final static String FirefoxDriverType = "webdriver.gecko.driver";
 
+	public static final String dbTestingDriver = org.h2.Driver.class.getName();
+	public static final String dbTestingURL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
+	public static final String dbTestingUser = "sa";
+	public static final String dbTestingPassword = "";
 	public final static String BROWSER = "FF"; // Options can be CH FF IE SF OP
 	public final static String OperatingSystem = System.getProperty("os.name").toLowerCase();
+
 	public static String dbIP;
 	public static String dbPort;
 	public static String dbName = "library";
 	public static String dbUser = "jenkins";
 	public static String dbPassword = "jenkins";
 	public static String dbDriverName = MariaDB.JDBC_DRIVER;
+	public static String dbMemoryDriver = "org.hsqldb.jdbc.JDBCDriver";
 	public static String dbUrl;
 	public static String DriverFile;
 	public static String DriverType;
 	public static String path2XML;
+	public static String dbTestingSchema;
 
 	@SuppressWarnings("unused")
 	public static void setEnvironment() {
@@ -34,6 +41,7 @@ public class Utils {
 			dbPort = "3306";
 			dbUrl = "jdbc:mariadb://" + dbIP + ":" + dbPort + "/" + dbName;
 			path2XML = "src\\resources\\";
+			dbTestingSchema = "src\\resources\\library_struct.sql";
 
 			if (BROWSER == "FF") {
 				DriverFile = FirefoxDriverFileWindows;
@@ -50,6 +58,7 @@ public class Utils {
 			dbPort = "3307";
 			dbUrl = "jdbc:mariadb://" + dbIP + ":" + dbPort + "/" + dbName;
 			path2XML = "src/resources/";
+			dbTestingSchema = "src/resources/library_struct.sql";
 
 			if (BROWSER == "FF") {
 				DriverFile = FirefoxDriverFileLinux;

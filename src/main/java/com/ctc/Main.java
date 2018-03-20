@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import javax.sql.DataSource;
+
+import mariadb.Book;
 import mariadb.DBUnitUtils;
 import mariadb.MariaDB;
 
@@ -32,7 +35,7 @@ public class Main {
 
 	}
 
-	private static void mainMenu() throws SQLException {
+	private static void mainMenu() throws Exception {
 		loop: while (true) {
 
 			System.out.println();
@@ -221,7 +224,7 @@ public class Main {
 		}
 	}
 
-	private static void utilsMenu() throws SQLException {
+	private static void utilsMenu() throws Exception {
 		loop: while (true) {
 
 			System.out.println();
@@ -229,7 +232,7 @@ public class Main {
 			System.out.println("-----------------------");
 			System.out.println("1. Partial export from DB.");
 			System.out.println("2. Full DB export.");
-			System.out.println("3. .");
+			System.out.println("3. Create DB in memory.");
 			System.out.println("4. .");
 			System.out.println("................");
 			System.out.println("Other. RETURN PREVIOUS MENU.");
@@ -242,6 +245,23 @@ public class Main {
 			case 1:
 				DBUnitUtils.generatePartialXML(Utils.dbDriverName, Utils.dbUrl, Utils.dbUser, Utils.dbPassword,
 						Utils.dbName, "LibraryPartial");
+				break;
+			case 2:
+				DBUnitUtils.generateXML(Utils.dbDriverName, Utils.dbUrl, Utils.dbUser, Utils.dbPassword, Utils.dbName,
+						"LibraryFull");
+				break;
+			case 3:
+				DBUnitUtils.createSchema();
+				DBUnitUtils.importDataSet();
+
+				DataSource dataSource = DBUnitUtils.dataSource();
+				Connection c = dataSource.getConnection();
+
+				Book b = new Book(c, 1);
+				Utils.consoleMsg(b.getRecordAsString());
+
+				c.close();
+
 				break;
 			default:
 				break loop;
