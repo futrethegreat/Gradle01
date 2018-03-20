@@ -1,6 +1,7 @@
 package mariadb;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class BookDBTest {
 	}
 
 	@Test
-	public void getBookByID() throws Exception {
+	public void getExistingBookByID() throws Exception {
 		DataSource dataSource = dataSource();
 		Connection c = dataSource.getConnection();
 
@@ -72,7 +73,17 @@ public class BookDBTest {
 
 		assertThat(b.getBookTitle(), is("El INGENIOSO HIDALGO don Quijote de la Mancha"));
 		assertThat(b.isLent(), is(true));
-		assertThat(b.getAuthor().getAuthorName(), is("Miguel de Cervante"));
+		assertThat(b.getAuthor().getAuthorName(), is("Miguel de Cervantes"));
+	}
+
+	@Test
+	public void getNonExistingBookByID() throws Exception {
+		DataSource dataSource = dataSource();
+		Connection c = dataSource.getConnection();
+
+		Book b = new Book(c, 0);
+
+		assertThat(b.getBookTitle(), is(nullValue()));
 	}
 
 	private DataSource dataSource() {
