@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.ctc.Utils;
@@ -31,7 +32,6 @@ public class Hook extends BaseUtil {
 	public void InitializeTest() throws InterruptedException {
 		Utils.setEnvironment();
 		base.driver = openBrowser();
-		Thread.sleep(3000);
 
 		Utils.consoleMsg(
 				"Opening browser: " + Utils.BROWSER + " for " + Utils.OperatingSystem.toUpperCase().toString());
@@ -54,6 +54,7 @@ public class Hook extends BaseUtil {
 		base.driver.quit();
 	}
 
+	@SuppressWarnings("unused")
 	private WebDriver openBrowser() {
 		// Passing the real webdriver for the browser selected
 		Utils.consoleMsg("Before setting up browser driver for browser: " + Utils.BROWSER);
@@ -70,10 +71,12 @@ public class Hook extends BaseUtil {
 		} else if (Utils.BROWSER == "FF") {
 			FirefoxOptions options = new FirefoxOptions();
 			options.setHeadless(true);
-
 			return new FirefoxDriver(options);
-		} else
+		} else if (Utils.BROWSER == "HT") {
+			return new HtmlUnitDriver();
+		} else {
 			return new FirefoxDriver();
+		}
 	}
 
 }

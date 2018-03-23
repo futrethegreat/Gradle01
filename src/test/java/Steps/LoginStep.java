@@ -22,7 +22,8 @@ public class LoginStep extends BaseUtil {
 
 	private BaseUtil base;
 	// public final String TrefiMainHomePage = "http://www.trefi.com";
-	public final String SecureTrefiPage = "https://secure.trefi.com/auth/";
+	// public final String SecureTrefiPage = "https://secure.trefi.com/auth/";
+	public final String SecureTrefiPage = "http://www.executeautomation.com/demosite/Login.html";
 	public final int Wait2secs = 2000; // 2000 Milliseconds
 
 	public LoginStep(BaseUtil base) {
@@ -38,14 +39,15 @@ public class LoginStep extends BaseUtil {
 	@Given("^I navigate to the secure Trefi page$")
 	public void givenINavigateToTheSecureTrefiPage() throws Throwable {
 
-		Utils.consoleMsg("*** ppio Given ***");
+		// Utils.consoleMsg("*** ppio Given ***");
 		base.driver.get(SecureTrefiPage);
-		Utils.consoleMsg("*** despues get page ***");
-		waitUntil_isPresent(base.driver, By.name("signinid"));
+		// Utils.consoleMsg("*** despues get page ***");
+		// waitUntil_isPresent(base.driver, By.name("signinid"));
 
-		Utils.consoleMsg("*** Esta presente ***");
-		Utils.consoleMsg(
-				"1: " + base.driver.findElement(By.name("enrollform")).findElement(By.name("signinid")).getTagName());
+		// Utils.consoleMsg("*** Esta presente ***");
+		// Utils.consoleMsg(
+		// "1: " +
+		// base.driver.findElement(By.name("enrollform")).findElement(By.name("signinid")).getTagName());
 
 		// base.driver.get("http://www.executeautomation.com/demosite/Login.html");
 		// Utils.consoleMsg("1: " +
@@ -53,7 +55,7 @@ public class LoginStep extends BaseUtil {
 		// Utils.consoleMsg("2: " +
 		// base.driver.findElement(By.name("Login")).getTagName());
 
-		Utils.consoleMsg("*** GIVEN ***");
+		// Utils.consoleMsg("*** GIVEN ***");
 
 	}
 

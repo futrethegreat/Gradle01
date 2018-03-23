@@ -15,7 +15,7 @@ public class Utils {
 	public static final String dbTestingURL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
 	public static final String dbTestingUser = "sa";
 	public static final String dbTestingPassword = "";
-	public final static String BROWSER = "FF"; // Options can be CH FF IE SF OP
+	public final static String BROWSER = "CH"; // Options can be CH FF IE SF OP
 	public final static String OperatingSystem = System.getProperty("os.name").toLowerCase();
 
 	public static String dbIP;

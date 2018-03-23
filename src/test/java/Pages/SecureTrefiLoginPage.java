@@ -11,19 +11,19 @@ public class SecureTrefiLoginPage {
 		PageFactory.initElements(driver, this);
 	}
 
-	// @FindBy(name = "UserName") //Prueba executeautomation
+	@FindBy(name = "UserName") // Prueba executeautomation
 	// @FindBy(id = "user-name")
-	@FindBy(name = "signinid")
+	// @FindBy(name = "signinid")
 	public WebElement txtUserName;
 
-	// @FindBy(name = "Password") //Prueba executeautomation
+	@FindBy(name = "Password") // Prueba executeautomation
 	// @FindBy(id = "user-pwd")
-	@FindBy(name = "pass")
+	// @FindBy(name = "pass")
 	public WebElement txtPassword;
 
-	// @FindBy(name = "Login") //Prueba executeautomation
+	@FindBy(name = "Login") // Prueba executeautomation
 	// @FindBy(id = "trefi-auth-btn")
-	@FindBy(name = "submitTrefi")
+	// @FindBy(name = "submitTrefi")
 	public WebElement btnLogIn;
 
 	@FindBy(xpath = "//*[@id=\"enrollform\"]/div/span")
