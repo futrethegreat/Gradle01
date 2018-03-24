@@ -4,6 +4,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -69,9 +70,17 @@ public class Hook extends BaseUtil {
 			chromeOptions.addArguments("window-size=1200x800");
 			return new ChromeDriver(chromeOptions);
 		} else if (Utils.BROWSER == "FF") {
-			FirefoxOptions options = new FirefoxOptions();
-			options.setHeadless(true);
-			return new FirefoxDriver(options);
+			FirefoxBinary firefoxBinary = new FirefoxBinary();
+			firefoxBinary.addCommandLineOptions("--headless");
+			// System.setProperty("webdriver.gecko.driver", "/opt/geckodriver");
+			FirefoxOptions firefoxOptions = new FirefoxOptions();
+			firefoxOptions.setBinary(firefoxBinary);
+			// FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
+			return new FirefoxDriver(firefoxOptions);
+
+			// FirefoxOptions options = new FirefoxOptions();
+			// options.setHeadless(true);
+			// return new FirefoxDriver(options);
 		} else if (Utils.BROWSER == "HT") {
 			return new HtmlUnitDriver();
 		} else {
