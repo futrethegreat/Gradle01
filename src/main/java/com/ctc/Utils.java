@@ -26,10 +26,19 @@ public class Utils {
 	public static String dbDriverName = MariaDB.JDBC_DRIVER;
 	public static String dbMemoryDriver = "org.hsqldb.jdbc.JDBCDriver";
 	public static String dbUrl;
+	public static String dbTestingSchema;
+	public static String dbCTBAdminIP;
+	public static String dbCTBAdminPort;
+	public static String dbCTBAdminName = "ctbadmin";
+	public static String dbCTBAdminUser = "promise";
+	public static String dbCTBAdminPassword = "hasdlU8sdf3Ajdsafl";
+	public static String dbCTBAdminDriverName = MariaDB.JDBC_DRIVER;
+	public static String dbCTBAdminMemoryDriver = "org.hsqldb.jdbc.JDBCDriver";
+	public static String dbCTBAdminUrl;
+	public static String dbCTBAdminTestingSchema;
 	public static String DriverFile;
 	public static String DriverType;
 	public static String path2XML;
-	public static String dbTestingSchema;
 
 	@SuppressWarnings("unused")
 	public static void setEnvironment() {
@@ -54,11 +63,15 @@ public class Utils {
 		} else if (OperatingSystem.contains("nux")) {
 			// SETTINGS FOR LINUX
 
-			dbIP = "192.168.116.163";
+			dbIP = "192.168.116.163"; // CTC-63
 			dbPort = "3307";
 			dbUrl = "jdbc:mariadb://" + dbIP + ":" + dbPort + "/" + dbName;
-			path2XML = "src/resources/";
 			dbTestingSchema = "src/resources/library_struct.sql";
+			dbCTBAdminIP = "192.168.115.135"; // CTC-41
+			dbCTBAdminPort = "3306";
+			dbCTBAdminUrl = "jdbc:mariadb://" + dbCTBAdminIP + ":" + dbCTBAdminPort + "/" + dbCTBAdminName;
+			dbCTBAdminTestingSchema = "src/resources/ctbadmin_struct.sql";
+			path2XML = "src/resources/";
 
 			if (BROWSER == "FF") {
 				DriverFile = FirefoxDriverFileLinux;

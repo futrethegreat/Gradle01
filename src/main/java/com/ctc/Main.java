@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import mariadb.Book;
 import mariadb.DBUnitUtils;
 import mariadb.MariaDB;
+import mariadb.UtilsCTBAdmin;
 
 public class Main {
 	static MariaDB javaMySQLBasic = new MariaDB();
@@ -46,7 +47,8 @@ public class Main {
 			System.out.println("3. User Management.");
 			System.out.println("4. Loan Management.");
 			System.out.println("................");
-			System.out.println("9. Utils.");
+			System.out.println("8. Library Utils.");
+			System.out.println("9. CTBAdmin Utils.");
 			System.out.println("................");
 			System.out.println("0. EXIT.");
 			System.out.println("----");
@@ -66,8 +68,11 @@ public class Main {
 			case 4:
 				Main.loanManagementMenu();
 				break;
+			case 8:
+				Main.libraryUtilsMenu();
+				break;
 			case 9:
-				Main.utilsMenu();
+				Main.ctbAdminUtilsMenu();
 				break;
 			default:
 				System.out.println("BYE !!!");
@@ -224,11 +229,11 @@ public class Main {
 		}
 	}
 
-	private static void utilsMenu() throws Exception {
+	private static void libraryUtilsMenu() throws Exception {
 		loop: while (true) {
 
 			System.out.println();
-			System.out.println("UTILITIES MENU");
+			System.out.println("LIBRARY UTILITIES MENU");
 			System.out.println("-----------------------");
 			System.out.println("1. Partial export from DB.");
 			System.out.println("2. Full DB export.");
@@ -261,6 +266,51 @@ public class Main {
 				Utils.consoleMsg(b.getRecordAsString());
 
 				c.close();
+
+				break;
+			default:
+				break loop;
+			}
+		}
+	}
+
+	private static void ctbAdminUtilsMenu() throws Exception {
+		loop: while (true) {
+
+			System.out.println();
+			System.out.println("CTBADMIN UTILITIES MENU");
+			System.out.println("-----------------------");
+			System.out.println("1. Partial export from DB.");
+			System.out.println("2. Full DB export.");
+			System.out.println("3. Create DB in memory.");
+			System.out.println("4. .");
+			System.out.println("................");
+			System.out.println("Other. RETURN PREVIOUS MENU.");
+			System.out.println("---------------------------");
+			System.out.println("Choose Option: ");
+			int lMenuOption = keyboard.nextInt();
+			keyboard.nextLine(); // to avoid last \n as nextInt does not read it.
+
+			switch (lMenuOption) {
+			case 1:
+				UtilsCTBAdmin.generatePartialXML(Utils.dbCTBAdminDriverName, Utils.dbCTBAdminUrl, Utils.dbCTBAdminUser,
+						Utils.dbCTBAdminPassword, Utils.dbCTBAdminName, "CTBAdminPartial");
+				break;
+			case 2:
+				UtilsCTBAdmin.generateXML(Utils.dbCTBAdminDriverName, Utils.dbCTBAdminUrl, Utils.dbCTBAdminUser,
+						Utils.dbCTBAdminPassword, Utils.dbCTBAdminName, "CTBAdminFull");
+				break;
+			case 3:
+				// DBUnitUtils.createSchema();
+				// DBUnitUtils.importDataSet();
+				//
+				// DataSource dataSource = DBUnitUtils.dataSource();
+				// Connection c = dataSource.getConnection();
+				//
+				// Book b = new Book(c, 1);
+				// Utils.consoleMsg(b.getRecordAsString());
+				//
+				// c.close();
 
 				break;
 			default:

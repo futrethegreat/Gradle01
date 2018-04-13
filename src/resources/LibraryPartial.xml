@@ -18,13 +18,13 @@
   <books BookID="11" BookTitle="Novelas ejemplares" AuthorID="1" Lent="0"/>
   <books BookID="12" BookTitle="La galatea" AuthorID="1" Lent="0"/>
   <books BookID="13" BookTitle="El alcalde de Zalamea" AuthorID="4" Lent="0"/>
+  <loans BookID="1" UserID="1" LoanStartDate="2018-03-05" LoanEndDate="2018-04-05"/>
+  <loans BookID="2" UserID="1" LoanStartDate="2018-03-06" LoanEndDate="2018-04-06"/>
+  <loans BookID="3" UserID="2" LoanStartDate="2018-03-12" LoanEndDate="2018-04-12"/>
   <users UserID="1" UserName="Peter Parker" BorrowedBooks="2"/>
   <users UserID="2" UserName="Bruce Banner" BorrowedBooks="1"/>
   <users UserID="3" UserName="Bruce Wayne" BorrowedBooks="0"/>
   <users UserID="4" UserName="Clark Kent" BorrowedBooks="0"/>
   <users UserID="5" UserName="Tony Stark" BorrowedBooks="0"/>
   <users UserID="6" UserName="Mortadelo" BorrowedBooks="0"/>
-  <loans BookID="1" UserID="1" LoanStartDate="2018-03-05" LoanEndDate="2018-04-05"/>
-  <loans BookID="2" UserID="1" LoanStartDate="2018-03-06" LoanEndDate="2018-04-06"/>
-  <loans BookID="3" UserID="2" LoanStartDate="2018-03-12" LoanEndDate="2018-04-12"/>
 </dataset>
