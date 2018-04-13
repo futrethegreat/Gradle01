@@ -113,11 +113,11 @@ public class UtilsCTBAdmin
 
 			QueryDataSet partialDataSet = new QueryDataSet(connection);
 			// Specify the SQL to run to retrieve the data
-			partialDataSet.addTable("receivable","select * from receivable where FKDEBTOR=\"56b1263c9322c\" or FKDEBTOR=\"56b09470e02ea\" or FKDEBTOR=\"56b0fc99a5601\"");
-			partialDataSet.addTable("legalentity","select * from legalentity where LEGALENTITYID=\"56b1263c9322c\" or LEGALENTITYID=\"56b09470e02ea\" or LEGALENTITYID=\"56b0fc99a5601\"");
-			partialDataSet.addTable("lender","select * from ctbadmin.lender where LEGALENTITYID=\"56b095bd4fbf1\" or LEGALENTITYID=\"56b129500205d\"");
-//			partialDataSet.addTable("le","select * from le where LEID=\"PE20306637305\" or LEID=\"KELEI38432\" or LEID=\"TZ0000630784\"");
-			partialDataSet.addTable("recline","select * from recline where RECEIVABLEID=\"56b095c4a330a\" OR RECEIVABLEID=\"56bd980d2e176\" OR RECEIVABLEID=\"56b1295486edb\"");
+			partialDataSet.addTable("ctbadmin.receivable","select * from ctbadmin.receivable where FKDEBTOR=\"56b1263c9322c\" or FKDEBTOR=\"56b09470e02ea\" or FKDEBTOR=\"56b0fc99a5601\"");
+			partialDataSet.addTable("ctbadmin.legalentity","select * from ctbadmin.legalentity where LEGALENTITYID=\"56b1263c9322c\" or LEGALENTITYID=\"56b09470e02ea\" or LEGALENTITYID=\"56b0fc99a5601\"");
+			partialDataSet.addTable("ctbadmin.lender","select * from ctbadmin.lender where LEGALENTITYID=\"56b095bd4fbf1\" or LEGALENTITYID=\"56b129500205d\"");
+			partialDataSet.addTable("ctbadmin.recline","select * from ctbadmin.recline where RECEIVABLEID=\"56b095c4a330a\" OR RECEIVABLEID=\"56bd980d2e176\" OR RECEIVABLEID=\"56b1295486edb\"");
+			partialDataSet.addTable("market.le","select * from market.le where LEID=\"PE20306637305\" or LEID=\"KELEI38432\" or LEID=\"TZ0000630784\"");
 
 			// Specify the location of the flat file(XML)
 			FlatXmlWriter datasetWriter = new FlatXmlWriter(new FileOutputStream(Utils.path2XML + nameXML + ".xml"));
