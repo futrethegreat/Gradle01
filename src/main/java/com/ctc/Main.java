@@ -1,6 +1,8 @@
 package com.ctc;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -284,6 +286,8 @@ public class Main {
 			System.out.println("2. Full DB export.");
 			System.out.println("3. Create DB in memory.");
 			System.out.println("4. .");
+			System.out.println();
+			System.out.println("9. Test.");
 			System.out.println("................");
 			System.out.println("Other. RETURN PREVIOUS MENU.");
 			System.out.println("---------------------------");
@@ -300,7 +304,22 @@ public class Main {
 				UtilsCTBAdmin.generateXML(Utils.dbCTBAdminDriverName, Utils.dbCTBAdminUrl, Utils.dbCTBAdminUser,
 						Utils.dbCTBAdminPassword, Utils.dbCTBAdminName, "CTBAdminFull");
 				break;
-			case 3:
+			case 9:
+
+				MariaDB mDB = new MariaDB();
+				Connection conn;
+				conn = mDB.connectDatabase(Utils.dbIP, Utils.dbPort, Utils.dbName, Utils.dbUser, Utils.dbPassword);
+
+				// PreparedStatement s = conn.prepareStatement("SELECT * FROM books");
+				PreparedStatement s = conn.prepareStatement(
+						"select bl.BookID,bl.BookTitle,price from library.books bl inner join shop.books bs on bl.BookID=bs.BookID; ");
+				ResultSet rs = s.executeQuery();
+
+				while (rs.next()) {
+					System.out.println(rs.getString("bl.BookID") + " - " + rs.getString("bl.BookTitle") + " - "
+							+ rs.getString("bs.price"));
+				}
+
 				// DBUnitUtils.createSchema();
 				// DBUnitUtils.importDataSet();
 				//
