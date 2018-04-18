@@ -4,9 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.sql.DataSource;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 import mariadb.Book;
 import mariadb.DBUnitUtils;
@@ -49,6 +59,7 @@ public class Main {
 			System.out.println("3. User Management.");
 			System.out.println("4. Loan Management.");
 			System.out.println("................");
+			System.out.println("7. Selenium test.");
 			System.out.println("8. Library Utils.");
 			System.out.println("9. CTBAdmin Utils.");
 			System.out.println("................");
@@ -70,6 +81,9 @@ public class Main {
 			case 4:
 				Main.loanManagementMenu();
 				break;
+			case 7:
+				Main.seleniumTest();
+				break;
 			case 8:
 				Main.libraryUtilsMenu();
 				break;
@@ -82,6 +96,76 @@ public class Main {
 			}
 		}
 
+	}
+
+	private static void seleniumTest() throws InterruptedException {
+		WebDriver wd;
+		String parentHandle;
+		Utils.setEnvironment();
+
+		wd = openBrowser();
+
+		// HOME
+		wd.get("https://iclvtestweb.capitool.com");
+		Utils.waitUntil_isPresent(wd, By.linkText("ACCEDER A CUENTA"));
+		WebElement lnkSignIn = wd.findElement(By.linkText("ACCEDER A CUENTA"));
+		lnkSignIn.click();
+
+		// Pagina de Login
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+		Utils.waitUntil_isPresent(wd, By.name("submitTrefi"));
+		WebElement txtUserName = wd.findElement(By.name("signinid"));
+		WebElement txtPassword = wd.findElement(By.name("pass"));
+		WebElement btnLogin = wd.findElement(By.name("submitTrefi"));
+		txtUserName.clear();
+		txtPassword.clear();
+		txtUserName.sendKeys("davidsauce");
+		txtPassword.sendKeys("Welcome1");
+		btnLogin.click();
+
+		// Pagina ppal The Tool
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+		Utils.waitUntil_isPresent(wd, By.linkText("Payables"));
+		WebElement lnkPayables = wd.findElement(By.linkText("Payables"));
+		lnkPayables.click();
+
+		// Pagina Payables
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+
+		// No.of Columns
+		Utils.waitUntil_isPresent(wd, By.id("ot80"));
+		WebElement InvoicesTable = wd.findElement(By.id("ot80"));
+		List<WebElement> tableRows = InvoicesTable.findElements(By.tagName("tr"));
+		System.out.println("No of rows are : " + tableRows.size());
+		for (int i = 0; i < tableRows.size(); i++) {
+			System.out.println(tableRows.get(i).getText());
+		}
+
+		tableRows.get(1).click();
+
+		WebElement lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/a/div/b"));
+		lstOption.click();
+		lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/div/ul/li[1]"));
+		lstOption.click();
+
+		Utils.waitUntil_isPresent(wd, By.id("PAYAMT"));
+		WebElement txtAmount = wd.findElement(By.id("PAYAMT"));
+		//// *[@id="PAYAMT"]
+		txtAmount.clear();
+		txtAmount.sendKeys("1");
+
+		Utils.consoleMsg("BYE!!!");
+
+		// wd.quit();
 	}
 
 	private static void authorManagementMenu() throws SQLException {
@@ -308,7 +392,7 @@ public class Main {
 
 				MariaDB mDB = new MariaDB();
 				Connection conn;
-				conn  = mDB.connectDatabase(Utils.dbIP, Utils.dbPort, Utils.dbName, Utils.dbUser, Utils.dbPassword);
+				conn = mDB.connectDatabase(Utils.dbIP, Utils.dbPort, Utils.dbName, Utils.dbUser, Utils.dbPassword);
 
 				// PreparedStatement s = conn.prepareStatement("SELECT * FROM books");
 				PreparedStatement s = conn.prepareStatement(
@@ -337,4 +421,38 @@ public class Main {
 			}
 		}
 	}
+
+	@SuppressWarnings("unused")
+	private static WebDriver openBrowser() {
+		// Passing the real webdriver for the browser selected
+		Utils.consoleMsg("Before setting up browser driver for browser: " + Utils.BROWSER);
+
+		System.setProperty(Utils.DriverType, Utils.DriverFile);
+		// driver se puede usar en LoginStep por dependency injection usando
+		// picocontainer
+		// (hook y loginstep extienden base)
+		if (Utils.BROWSER == "CHH") {
+			ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("headless");
+			chromeOptions.addArguments("window-size=1200x800");
+			return new ChromeDriver(chromeOptions);
+		} else if (Utils.BROWSER == "FFH") {
+			FirefoxBinary firefoxBinary = new FirefoxBinary();
+			firefoxBinary.addCommandLineOptions("--headless");
+			FirefoxOptions firefoxOptions = new FirefoxOptions();
+			firefoxOptions.setBinary(firefoxBinary);
+			return new FirefoxDriver(firefoxOptions);
+
+			// FirefoxOptions options = new FirefoxOptions();
+			// options.setHeadless(true);
+			// return new FirefoxDriver(options);
+		} else if (Utils.BROWSER == "CH") {
+			return new ChromeDriver();
+		} else if (Utils.BROWSER == "FF") {
+			return new FirefoxDriver();
+		} else {
+			return new FirefoxDriver();
+		}
+	}
+
 }

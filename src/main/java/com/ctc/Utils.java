@@ -1,5 +1,13 @@
 package com.ctc;
 
+import java.text.Normalizer;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import mariadb.MariaDB;
 
 public class Utils {
@@ -15,7 +23,7 @@ public class Utils {
 	public static final String dbTestingURL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
 	public static final String dbTestingUser = "sa";
 	public static final String dbTestingPassword = "";
-	public final static String BROWSER = "FF"; // Options can be CH FF IE SF OP
+	public final static String BROWSER = "CH"; // Options can be CH FF IE SF OP
 	public final static String OperatingSystem = System.getProperty("os.name").toLowerCase();
 
 	public static String dbIP;
@@ -52,10 +60,10 @@ public class Utils {
 			path2XML = "src\\resources\\";
 			dbTestingSchema = "src\\resources\\library_struct.sql";
 
-			if (BROWSER == "FF") {
+			if ((BROWSER == "FF") || (BROWSER == "FFH")) {
 				DriverFile = FirefoxDriverFileWindows;
 				DriverType = FirefoxDriverType;
-			} else if (BROWSER == "CH") {
+			} else if ((BROWSER == "CH") || (BROWSER == "CHH")) {
 				DriverFile = ChromeDriverFileWindows;
 				DriverType = ChromeDriverType;
 			}
@@ -73,10 +81,10 @@ public class Utils {
 			dbCTBAdminTestingSchema = "src/resources/ctbadmin_struct.sql";
 			path2XML = "src/resources/";
 
-			if (BROWSER == "FF") {
+			if ((BROWSER == "FF") || (BROWSER == "FFH")) {
 				DriverFile = FirefoxDriverFileLinux;
 				DriverType = FirefoxDriverType;
-			} else if (BROWSER == "CH") {
+			} else if ((BROWSER == "CH") || (BROWSER == "CHH")) {
 				DriverFile = ChromeDriverFileLinux;
 				DriverType = ChromeDriverType;
 			}
@@ -86,6 +94,29 @@ public class Utils {
 	public static void consoleMsg(String msg) {
 		System.out.println(msg);
 		System.out.println();
+	}
+
+	public static boolean waitUntil_isPresent(final WebDriver driver, final By locator) throws TimeoutException {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+		} catch (TimeoutException te) {
+			// te.printStackTrace();
+			// return false;
+			throw new TimeoutException();
+		}
+		return true;
+
+	}
+
+	public static String normalizeString(String s) {
+		String normalizedString = Normalizer.normalize(s, Normalizer.Form.NFD);
+		normalizedString = normalizedString.replaceAll("[^\\p{ASCII}]", "");
+		return normalizedString;
+	}
+
+	public static void waitFor(long m) throws InterruptedException {
+		Thread.sleep(0);
 	}
 
 }
