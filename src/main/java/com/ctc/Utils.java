@@ -5,6 +5,7 @@ import java.text.Normalizer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -106,7 +107,30 @@ public class Utils {
 			throw new TimeoutException();
 		}
 		return true;
+	}
 
+	public static boolean waitUntil_isClickable(final WebDriver driver, final By locator) throws TimeoutException {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.elementToBeClickable(locator));
+		} catch (TimeoutException te) {
+			// te.printStackTrace();
+			// return false;
+			throw new TimeoutException();
+		}
+		return true;
+	}
+
+	public static boolean waitUntil_isClickable(final WebDriver driver, final WebElement WE) throws TimeoutException {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.elementToBeClickable(WE));
+		} catch (TimeoutException te) {
+			// te.printStackTrace();
+			// return false;
+			throw new TimeoutException();
+		}
+		return true;
 	}
 
 	public static String normalizeString(String s) {

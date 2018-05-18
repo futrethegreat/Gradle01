@@ -1,5 +1,6 @@
 package com.ctc;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,6 +60,7 @@ public class Main {
 			System.out.println("3. User Management.");
 			System.out.println("4. Loan Management.");
 			System.out.println("................");
+			System.out.println("6. Selenium Menu test.");
 			System.out.println("7. Selenium test.");
 			System.out.println("8. Library Utils.");
 			System.out.println("9. CTBAdmin Utils.");
@@ -81,6 +83,9 @@ public class Main {
 			case 4:
 				Main.loanManagementMenu();
 				break;
+			case 6:
+				Main.seleniumClickMenuTest();
+				break;
 			case 7:
 				Main.seleniumTest();
 				break;
@@ -100,6 +105,7 @@ public class Main {
 
 	private static void seleniumTest() throws InterruptedException {
 		WebDriver wd;
+		@SuppressWarnings("unused")
 		String parentHandle;
 		Utils.setEnvironment();
 
@@ -141,32 +147,223 @@ public class Main {
 			wd.switchTo().window(winHandle);
 		}
 
-		// No.of Columns
+		// Access table data
 		Utils.waitUntil_isPresent(wd, By.id("ot80"));
 		WebElement InvoicesTable = wd.findElement(By.id("ot80"));
+		// Table rows
 		List<WebElement> tableRows = InvoicesTable.findElements(By.tagName("tr"));
 		System.out.println("No of rows are : " + tableRows.size());
 		for (int i = 0; i < tableRows.size(); i++) {
 			System.out.println(tableRows.get(i).getText());
 		}
 
-		tableRows.get(1).click();
+		// Row#1 columns
+		List<WebElement> rowCells = tableRows.get(1).findElements(By.tagName("td"));
+		System.out.println("No of cols are : " + rowCells.size());
+		for (int i = 0; i < rowCells.size(); i++) {
+			System.out.println(rowCells.get(i).getText());
+		}
+		// Click on first data row
+		Utils.waitUntil_isClickable(wd, rowCells.get(1));
+		rowCells.get(1).click();
 
+		// Click on list box row to unfold
 		WebElement lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/a/div/b"));
 		lstOption.click();
+		// Click on Pay invoice option from the list
 		lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/div/ul/li[1]"));
 		lstOption.click();
 
+		// Wait until the list is folded and the Amount field is displayed again. Then
+		// type an amount.
 		Utils.waitUntil_isPresent(wd, By.id("PAYAMT"));
 		WebElement txtAmount = wd.findElement(By.id("PAYAMT"));
-		//// *[@id="PAYAMT"]
 		txtAmount.clear();
-		txtAmount.sendKeys("1");
+		txtAmount.sendKeys("1.1");
+
+		BigDecimal amount2Pay = new BigDecimal("1.1");
+		BigDecimal previousAmount;
+		BigDecimal expectedAmount;
+		BigDecimal nextAmount;
+		Utils.consoleMsg("Open column: " + rowCells.get(6).getText().replace(",", ""));
+		previousAmount = new BigDecimal(rowCells.get(6).getText().replace(",", ""));
+		expectedAmount = previousAmount.subtract(amount2Pay);
+
+		// Click on Execute button
+		WebElement btnExecute = wd.findElement(By.id("execute1"));
+		btnExecute.click();
+
+		// Click on Refresh button
+		WebElement btnRefresh = wd.findElement(By.id("refreshicon"));
+		btnRefresh.click();
+		Thread.sleep(1500); // ESTA ESPERA HAY QUE HACERLO DINAMICO
+		InvoicesTable = wd.findElement(By.id("ot80"));
+		tableRows = InvoicesTable.findElements(By.tagName("tr"));
+		rowCells = tableRows.get(1).findElements(By.tagName("td"));
+		nextAmount = new BigDecimal(rowCells.get(6).getText().replace(",", ""));
+
+		Utils.consoleMsg("Previous: " + previousAmount.toString() + " - Expected: " + expectedAmount.toString()
+				+ " - Returned: " + nextAmount.toString());
+		if (expectedAmount.compareTo(nextAmount) == 0) {
+			System.out.println("WORKING GOOD! :-D");
+		} else {
+			System.out.println("WORKING BAD! X-(");
+		}
 
 		Utils.consoleMsg("BYE!!!");
 
-		// wd.quit();
+		wd.quit();
 	}
+
+	private static void seleniumClickMenuTest() throws InterruptedException {
+		WebDriver wd;
+		@SuppressWarnings("unused")
+		String parentHandle;
+		Utils.setEnvironment();
+
+		wd = openBrowser();
+
+		// HOME
+		wd.get("https://iclvtestweb.capitool.com");
+		Utils.waitUntil_isPresent(wd, By.linkText("ACCEDER A CUENTA"));
+		WebElement lnkSignIn = wd.findElement(By.linkText("ACCEDER A CUENTA"));
+		lnkSignIn.click();
+
+		// Pagina de Login
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+		Utils.waitUntil_isPresent(wd, By.name("submitTrefi"));
+		WebElement txtUserName = wd.findElement(By.name("signinid"));
+		WebElement txtPassword = wd.findElement(By.name("pass"));
+		WebElement btnLogin = wd.findElement(By.name("submitTrefi"));
+		txtUserName.clear();
+		txtPassword.clear();
+		txtUserName.sendKeys("davidsauce");
+		txtPassword.sendKeys("Welcome1");
+		btnLogin.click();
+
+		// Pagina ppal The Tool
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+		
+		//Minimizar Capital Tool Company Limited
+		WebElement lnkCTC = wd.findElement(By.xpath("//*[@title='HK1296102']"));
+		lnkCTC.click();
+		Thread.sleep(500);
+		
+		//Maximizar DANPER
+		WebElement lnkDANPER = wd.findElement(By.xpath("//*[@title='PE20170040938']"));
+		lnkDANPER.click();
+		
+		//Click en link Payables
+		Utils.waitUntil_isPresent(wd, By.linkText("Payables"));
+		WebElement lnkPayables = wd.findElement(By.linkText("Payables"));
+		lnkPayables.click();
+		
+		//Minimizar DANPER
+		lnkDANPER.click();
+		Thread.sleep(500);
+		
+		//Maximizar CTCLATAM
+		WebElement lnkCTCLATAM = wd.findElement(By.xpath("//*[@title='PE20523625633']"));
+		lnkCTCLATAM.click();
+		
+		//Click en link Invoices
+		Utils.waitUntil_isPresent(wd, By.linkText("Invoices"));
+		WebElement lnkInvoices = wd.findElement(By.linkText("Invoices"));
+		lnkInvoices.click();
+		
+		// Access Supplier tables
+		Utils.waitUntil_isPresent(wd, By.id("ot55"));
+		WebElement SuppliersTable = wd.findElement(By.id("ot55"));
+		// Table rows
+		List<WebElement> tableRows = SuppliersTable.findElements(By.tagName("tr"));
+		System.out.println("No of rows are : " + tableRows.size());
+		for (int i = 0; i < tableRows.size(); i++) {
+			System.out.println(tableRows.get(i).getText());
+		}
+
+		
+		
+
+		// Pagina Payables
+		parentHandle = wd.getWindowHandle();
+		for (String winHandle : wd.getWindowHandles()) {
+			wd.switchTo().window(winHandle);
+		}
+
+		// Access table data
+		Utils.waitUntil_isPresent(wd, By.id("ot80"));
+		WebElement InvoicesTable = wd.findElement(By.id("ot80"));
+		// Table rows
+		tableRows = InvoicesTable.findElements(By.tagName("tr"));
+		System.out.println("No of rows are : " + tableRows.size());
+		for (int i = 0; i < tableRows.size(); i++) {
+			System.out.println(tableRows.get(i).getText());
+		}
+
+		// Row#1 columns
+		List<WebElement> rowCells = tableRows.get(1).findElements(By.tagName("td"));
+		System.out.println("No of cols are : " + rowCells.size());
+		for (int i = 0; i < rowCells.size(); i++) {
+			System.out.println(rowCells.get(i).getText());
+		}
+		// Click on first data row
+		Utils.waitUntil_isClickable(wd, rowCells.get(1));
+		rowCells.get(1).click();
+
+		// Click on list box row to unfold
+		WebElement lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/a/div/b"));
+		lstOption.click();
+		// Click on Pay invoice option from the list
+		lstOption = wd.findElement(By.xpath("//*[@id=\"selectedActTypeid_chosen\"]/div/ul/li[1]"));
+		lstOption.click();
+
+		// Wait until the list is folded and the Amount field is displayed again. Then
+		// type an amount.
+		Utils.waitUntil_isPresent(wd, By.id("PAYAMT"));
+		WebElement txtAmount = wd.findElement(By.id("PAYAMT"));
+		txtAmount.clear();
+		txtAmount.sendKeys("1.1");
+
+		BigDecimal amount2Pay = new BigDecimal("1.1");
+		BigDecimal previousAmount;
+		BigDecimal expectedAmount;
+		BigDecimal nextAmount;
+		Utils.consoleMsg("Open column: " + rowCells.get(6).getText().replace(",", ""));
+		previousAmount = new BigDecimal(rowCells.get(6).getText().replace(",", ""));
+		expectedAmount = previousAmount.subtract(amount2Pay);
+
+		// Click on Execute button
+		WebElement btnExecute = wd.findElement(By.id("execute1"));
+		btnExecute.click();
+
+		// Click on Refresh button
+		WebElement btnRefresh = wd.findElement(By.id("refreshicon"));
+		btnRefresh.click();
+		Thread.sleep(1500); // ESTA ESPERA HAY QUE HACERLO DINAMICO
+		InvoicesTable = wd.findElement(By.id("ot80"));
+		tableRows = InvoicesTable.findElements(By.tagName("tr"));
+		rowCells = tableRows.get(1).findElements(By.tagName("td"));
+		nextAmount = new BigDecimal(rowCells.get(6).getText().replace(",", ""));
+
+		Utils.consoleMsg("Previous: " + previousAmount.toString() + " - Expected: " + expectedAmount.toString()
+				+ " - Returned: " + nextAmount.toString());
+		if (expectedAmount.compareTo(nextAmount) == 0) {
+			System.out.println("WORKING GOOD! :-D");
+		} else {
+			System.out.println("WORKING BAD! X-(");
+		}
+
+		Utils.consoleMsg("BYE!!!");
+
+		wd.quit();
+	}
+
 
 	private static void authorManagementMenu() throws SQLException {
 		loop: while (true) {
